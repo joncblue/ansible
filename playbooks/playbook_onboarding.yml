@@ -15,11 +15,11 @@
       name: ansible
       groups: wheel
 
-  - name: add ssh key for ansible
-    tags: always
-    authorized_key:
-      user: ansible
-      key:
+  # - name: add ssh key for ansible
+  #   tags: always
+  #   authorized_key:
+  #     user: ansible
+  #     key:
 
   - name: add sudoers file for ansible
     tags: always
