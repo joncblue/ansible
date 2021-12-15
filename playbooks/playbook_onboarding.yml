@@ -1,23 +1,58 @@
+# - hosts: all
+#   become: true
+#   vars:
+#     users:
+#     - ansible
+  
+
 - hosts: all
   become: true
-  vars:
-    users:
-    - ansible
-  
   tasks:
+
   - name: create the ansible user
+    tags: always
     user:
-      name: "{{ item }}"
-      groups: "wheel"
-    with_items: "{{ users }}"
-  - name: "Add authorized keys"
+      name: ansible
+      groups: wheel
+
+  - name: add ssh key for ansible
+    tags: always
     authorized_key:
-      user: "{{ item }}"
-      key: "{{ lookup('file', 'files/'+ item + '.key.pub') }}"
-    with_items: "{{ users }}"
-  - name: "Allow the ansible user to sudo without a password"
-    lineinfile:
-      dest: "/etc/sudoers"
-      state: "present"
-      insertafter: '^root'
-      line: "ansible ALL=(ALL) NOPASSWD: ALL"
+      user: ansible
+      key:
+
+  - name: add sudoers file for ansible
+    tags: always
+    copy:
+      src: sudoer_ansible
+      dest: /etc/sudoers.d/ansible
+      owner: root
+      group: root
+
+
+
+
+
+
+
+
+
+
+
+  # tasks:
+  # - name: create the ansible user
+  #   user:
+  #     name: "{{ item }}"
+  #     groups: "wheel"
+  #   with_items: "{{ users }}"
+  # - name: "Add authorized keys"
+  #   authorized_key:
+  #     user: "{{ item }}"
+  #     key: "{{ lookup('file', 'files/'+ item + '.key.pub') }}"
+  #   with_items: "{{ users }}"
+  # - name: "Allow the ansible user to sudo without a password"
+  #   lineinfile:
+  #     dest: "/etc/sudoers"
+  #     state: "present"
+  #     insertafter: '^root'
+  #     line: "ansible ALL=(ALL) NOPASSWD: ALL"
